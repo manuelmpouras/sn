@@ -1,15 +1,16 @@
 #!/bin/sh
-
 sub_new()
 {
-Echo Perfect
-}
-subcommand="$1"
 
+echo "$1" "$2"
+
+}
+
+subcommand="$1"
+net_name="$2"
 shift
 case "$subcommand" in
-
   create)
-    create_new "$@"
-    ;;
- esac
+  sub_new "$subcommand" "$net_name"
+  ;;
+  esac
