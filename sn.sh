@@ -2,7 +2,7 @@
 sub_new()
 {
 echo "$1"
-git init remote "$1"
+git init "$1"
 #git push "$1"
   if ! [ "$1" ] ; then
     git init -q || error 'Unable to initialize Git directory'
