@@ -1,8 +1,13 @@
 #!/bin/sh
 sub_new()
 {
+echo "$1"
+git init remote "$1"
+#git push "$1"
+  if ! [ "$1" ] ; then
+    git init -q || error 'Unable to initialize Git directory'
+  fi
 
-echo "$1" "$2"
 
 }
 
@@ -11,6 +16,6 @@ net_name="$2"
 shift
 case "$subcommand" in
   create)
-  sub_new "$subcommand" "$net_name"
+  sub_new "$@"
   ;;
   esac
