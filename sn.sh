@@ -16,9 +16,8 @@ echo "$1"
 
 sub_join()
 {
-echo "$1"
 ##Joining in an already existing social network (git repository) and cloning it in the current directory
-  if [ "$1" ] ; then
+  if ! [ -d CoolNetwork/ ] ; then
     git clone https://github.com/manuelmpouras/CoolNetwork
 	echo $(whoami)>>$(pwd)"/CoolNetwork/users.log"
 	cd $(pwd)"/CoolNetwork/"
@@ -29,7 +28,7 @@ echo "$1"
 	echo $(pwd)"/CoolNetwork/users.log"
 	cd ..
   else
-	echo "Please define the name of the social network"
+	echo "You have already been registered. Thank you for joining our CoolNetwork."
 
   fi
 }
