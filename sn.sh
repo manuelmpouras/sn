@@ -127,6 +127,37 @@ sub_like()
 	fi
 }
 
+sub_post()
+{
+##Post a new story on the CoolNetwork
+	if ! [ -d CoolNetwork/ ] ; then
+		echo Plese first pull the latest changes with /sn pull/
+	else
+#		if [ "$1" ] ; then
+		cd $(pwd)"/CoolNetwork/"
+		num=$(find . -name "*.post" |
+		wc -l )
+		n=$(expr $num + 1)
+		echo $1 | cat> $n.post
+		echo $n
+		echo $(whoami)>"$n.post.info"
+		echo $(date)>>"$n.post.info"
+		echo 0 >>"$n.post.info"
+		git add "$n.post"
+		git add "$n.post.info"
+		git commit -m "New story"
+		git remote add origin https://github.com/manuelmpouras/CoolNetwork
+		git push -u origin master
+		if [ $? -ne 0 ] ; then
+			echo Oooops. Registration failed. I am sorry you should login in your github\' account.
+		else
+			cd ..
+		fi
+#		else 
+#			echo Please write down a story to post
+#		fi
+	fi
+}
 
 sub_help()
 {
@@ -154,7 +185,10 @@ Start an issue repository
 			
   log			List all the posts and likes of the CoolNetwork.
   
-  like			Like a specified post"
+  like			Like a specified post
+
+
+  post			Post a new story"
 
 }
 
@@ -182,6 +216,9 @@ case "$subcommand" in
   ;;
   like)
   sub_like "$@"
+  ;;
+  post)
+  sub_post "$@"
   ;;
   help)
   sub_help
