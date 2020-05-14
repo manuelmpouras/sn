@@ -106,9 +106,21 @@ sub_like()
 	else
 		if [ "$1" ] ; then
 			cd $(pwd)"/CoolNetwork/"
-				echo "$1"
+			echo "$1"
 				test -f $1 || echo Is not a corect name /e.g. 1.post or 2.post etc./
-				test -f $1 && cat $(pwd)"/"$1 && "1">>$(pwd)"/"$1".info"
+				if test -f $1 ; then
+					likes=$(sed -n 3p "$1.info") && user=$(sed -n 1p "$1.info") && date=$(sed -n 2p "$1.info") && echo $user | cat>"$1.info"; echo $date | cat>>"$1.info" && echo $likes+1 | bc | cat>>"$1.info"
+					git add "$1.info"
+					git commit -m "New like"
+					git remote add origin https://github.com/manuelmpouras/CoolNetwork
+					git push -u origin master
+					if [ $? -ne 0 ] ; then
+						echo Oooops. Registration failed. I am sorry you should login in your github\' account.
+					else
+						cd ..
+					fi
+
+				fi
 		else 
 			echo Please define a corect name /e.g. 1.post or 2.post etc./ of an existing post
 		fi
@@ -140,7 +152,9 @@ Start an issue repository
 			all the posts and likes of the CoolNetwork.
 			
 			
-  log			List all the posts and likes of the CoolNetwork."
+  log			List all the posts and likes of the CoolNetwork.
+  
+  like			Like a specified post"
 
 }
 
