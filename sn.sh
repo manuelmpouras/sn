@@ -82,6 +82,39 @@ sub_log()
 		echo " You can see all of them in your local CoolNetwork directory"
 	fi
 }
+sub_show()
+{
+##Show a specified post of the CoolNetwork
+	if ! [ -d CoolNetwork/ ] ; then
+		echo Plese first pull the latest changes with /sn pull/
+	else
+		if [ "$1" ] ; then
+			cd $(pwd)"/CoolNetwork/"
+				echo -n "$1:"
+				test -f $1 || echo Is not a corect name /e.g. 1.post or 2.post etc./
+				test -f $1 && cat $(pwd)"/"$1
+		else 
+			echo Please define a corect name /e.g. 1.post or 2.post etc./ of an existing post
+		fi
+	fi
+}
+sub_like()
+{
+##Like a specified post of the CoolNetwork
+	if ! [ -d CoolNetwork/ ] ; then
+		echo Plese first pull the latest changes with /sn pull/
+	else
+		if [ "$1" ] ; then
+			cd $(pwd)"/CoolNetwork/"
+				echo "$1"
+				test -f $1 || echo Is not a corect name /e.g. 1.post or 2.post etc./
+				test -f $1 && cat $(pwd)"/"$1 && "1">>$(pwd)"/"$1".info"
+		else 
+			echo Please define a corect name /e.g. 1.post or 2.post etc./ of an existing post
+		fi
+	fi
+}
+
 
 sub_help()
 {
@@ -129,6 +162,12 @@ case "$subcommand" in
   ;;
   log)
   sub_log
+  ;;
+  show)
+  sub_show "$@"
+  ;;
+  like)
+  sub_like "$@"
   ;;
   help)
   sub_help
