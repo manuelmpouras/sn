@@ -1,8 +1,8 @@
 #!/bin/sh
+##Creating a local Social Network (git repository) in the current directory
 sub_new()
 {
 echo "$1"
-##Creating a local Social Network (git repository) in the current directory
   if [ "$1" ] ; then
     git init $(pwd)"/""$1"
 	echo $(whoami)>>$(pwd)"/"$1"/users.log"
@@ -14,9 +14,9 @@ echo "$1"
 
 }
 
+##Joining in an already existing social network (git repository) and cloning it in the current directory
 sub_join()
 {
-##Joining in an already existing social network (git repository) and cloning it in the current directory
   if ! [ -d CoolNetwork/ ] ; then
     git clone https://github.com/manuelmpouras/CoolNetwork
 	echo $(whoami)>>$(pwd)"/CoolNetwork/users.log"
@@ -37,9 +37,9 @@ sub_join()
   fi
 }
 
+##Show all the members registered in the CoolNetwork
 sub_show()
 {
-##Show all the members registered in the CoolNetwork
 if ! [ -d CoolNetwork/ ] ; then
 	git clone https://github.com/manuelmpouras/CoolNetwork
 	cd $(pwd)"/CoolNetwork/"
@@ -53,9 +53,9 @@ else
 	uniq && echo " THE MEMBERS REGISTERED"
 fi
 }
+##Pull all the new posts and likes of the CoolNetwork
 sub_pull()
 {
-##Pull all the new posts and likes of the CoolNetwork
 	if [ -d CoolNetwork/ ] ; then
 		rm -rf CoolNetwork/
 	fi
@@ -64,9 +64,9 @@ sub_pull()
 	echo " You can see all of them in your local CoolNetwork directory"
 }
 
+##List all the posts and likes of the CoolNetwork
 sub_log()
 {
-##List all the posts and likes of the CoolNetwork
 	if ! [ -d CoolNetwork/ ] ; then
 		echo Plese first pull the latest changes with /sn pull/
 	else
@@ -82,9 +82,9 @@ sub_log()
 		echo " You can see all of them in your local CoolNetwork directory"
 	fi
 }
+##Show a specified post of the CoolNetwork
 sub_show()
 {
-##Show a specified post of the CoolNetwork
 	if ! [ -d CoolNetwork/ ] ; then
 		echo Plese first pull the latest changes with /sn pull/
 	else
@@ -98,9 +98,9 @@ sub_show()
 		fi
 	fi
 }
+##Like a specified post of the CoolNetwork
 sub_like()
 {
-##Like a specified post of the CoolNetwork
 	if ! [ -d CoolNetwork/ ] ; then
 		echo Plese first pull the latest changes with /sn pull/
 	else
@@ -126,14 +126,12 @@ sub_like()
 		fi
 	fi
 }
-
+##Post a new story on the CoolNetwork
 sub_post()
 {
-##Post a new story on the CoolNetwork
 	if ! [ -d CoolNetwork/ ] ; then
 		echo Plese first pull the latest changes with /sn pull/
 	else
-#		if [ "$1" ] ; then
 		cd $(pwd)"/CoolNetwork/"
 		num=$(find . -name "*.post" |
 		wc -l )
@@ -153,15 +151,35 @@ sub_post()
 		else
 			cd ..
 		fi
-#		else 
-#			echo Please write down a story to post
-#		fi
 	fi
 }
 
+##Push a locally changed file to the CoolNetwork
+sub_push()
+{
+	if ! [ -d CoolNetwork/ ] ; then
+		echo Plese first pull the latest changes with /sn pull/
+	else
+		if [ "$1" ] && test -f CoolNetwork/$1; then
+			cd $(pwd)"/CoolNetwork/"
+			git add "$1"
+			git commit -m "new push from local changes"
+			git remote add origin https://github.com/manuelmpouras/CoolNetwork
+			git push -u origin master
+			if [ $? -ne 0 ] ; then
+				echo Oooops. Registration failed. I am sorry you should login in your github\' account.
+			else
+				cd ..
+			fi
+		else 
+			echo Please define just the name of the local file, you changed in the locally cloned repository of the CoolNetwork, you want to push
+		fi
+	fi
+}
+
+## In case of typing anything other than a specified argument of sn, then help page will be displayed 
 sub_help()
 {
-## In case of typing anything other than a specified argument of sn, then help page will be displayed 
 echo "|
 Start an issue repository
 
@@ -188,7 +206,10 @@ Start an issue repository
   like			Like a specified post
 
 
-  post			Post a new story"
+  post			Post a new story
+
+
+  push			a locally changed file to the CoolNetwork"
 
 }
 
@@ -219,6 +240,9 @@ case "$subcommand" in
   ;;
   post)
   sub_post "$@"
+  ;;
+  push)
+  sub_push "$@"
   ;;
   help)
   sub_help
