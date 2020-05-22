@@ -19,6 +19,7 @@ sub_join()
 {
   if ! [ -d CoolNetwork/ ] ; then
     git clone https://github.com/manuelmpouras/CoolNetwork
+	git config --global user.name 'uname'
 	echo $(whoami)>>$(pwd)"/CoolNetwork/users.log"
 	cd $(pwd)"/CoolNetwork/"
 	git add "users.log"
@@ -38,17 +39,17 @@ sub_join()
 }
 
 ##Show all the members registered in the CoolNetwork
-sub_show()
+sub_show_members()
 {
 if ! [ -d CoolNetwork/ ] ; then
 	git clone https://github.com/manuelmpouras/CoolNetwork
 	cd $(pwd)"/CoolNetwork/"
-	git log --pretty=format:%an |
+	ls users.log && git log --pretty=format:%an |
 	sort |
 	uniq && echo " THE MEMBERS REGISTERED"
 else
 	cd $(pwd)"/CoolNetwork/"
-	git log --pretty=format:%an |
+	ls users.log && git log --pretty=format:%an |
 	sort |
 	uniq && echo " THE MEMBERS REGISTERED"
 fi
@@ -177,6 +178,41 @@ sub_push()
 	fi
 }
 
+##Show all posts of the CoolNetwork
+sub_show_all_posts()
+{
+	if ! [ -d CoolNetwork/ ] ; then
+		echo Plese first pull the latest changes with /sn pull/
+	else
+				cd CoolNetwork/
+				find . -name "*.post" |
+				while read f ; do
+					echo $f
+					cat $f
+				done
+	fi
+}
+##Follow a specified post of the CoolNetwork, the posts of this specific user will be copied to your /CoolNetwork/mywall local directory
+sub_follow()
+{
+	if ! [ -d CoolNetwork/ ] ; then
+		echo Plese first pull the latest changes with /sn pull/
+	else
+		if [ "$1" ] ; then
+			cd $(pwd)"/CoolNetwork/"
+			git log --pretty="%H" --author=$1 |
+			while read commit_hash ; do
+			git show --oneline --name-only $commit_hash 
+			done |
+			find *.post |
+			while read posts ; do
+			cp $posts ./mywall/$posts && echo $posts of $1 has been copied successfully to my local ./CoolNetwork/mywall directory.
+			done
+		else
+			echo Please user name you want to follow
+		fi
+	fi
+}
 ## In case of typing anything other than a specified argument of sn, then help page will be displayed 
 sub_help()
 {
@@ -224,7 +260,7 @@ case "$subcommand" in
   sub_join "$@"
   ;;
   show_members)
-  sub_show
+  sub_show_members
   ;;
   pull)
   sub_pull
@@ -243,6 +279,12 @@ case "$subcommand" in
   ;;
   push)
   sub_push "$@"
+  ;;
+  show_all_posts)
+  sub_show_all_posts
+  ;;
+  follow)
+  sub_follow "$@"
   ;;
   help)
   sub_help
