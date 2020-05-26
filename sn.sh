@@ -192,8 +192,32 @@ sub_show_all_posts()
 				done
 	fi
 }
-##Follow a specified post of the CoolNetwork, the posts of this specific user will be copied to your /CoolNetwork/mywall local directory
+##Follow a specified user of the CoolNetwork, the posts of this specific user will be copied to your /CoolNetwork/mywall local directory
 sub_follow()
+{
+	if ! [ -d CoolNetwork/ ] ; then
+		echo Plese first pull the latest changes with /sn pull/
+	else
+		if [ "$1" ] ; then
+			cd $(pwd)"/CoolNetwork/"
+			test -d $(pwd)/mywall || mkdir $(pwd)/mywall
+			flag=0
+			find *.post |
+			while read posts ; do
+				user=$(sed -n 1p $posts".info")
+				if [ $user == $1 ] ; then
+					cp $posts $(pwd)/mywall/$posts && echo $posts of $1 has been copied successfully to my local ./CoolNetwork/mywall directory. && touch $(pwd)/mywall/null
+				fi
+			done
+			test -f $(pwd)/mywall/null || echo I am sorry there no any post of this user yet
+			test -f $(pwd)/mywall/null && rm $(pwd)/mywall/null
+		else
+			echo Please enter the user name you want to follow
+		fi
+	fi
+}
+##Unfollow a specified user of the CoolNetwork, the posts of this specific user will be deleted for your /CoolNetwork/mywall local directory
+sub_unfollow()
 {
 	if ! [ -d CoolNetwork/ ] ; then
 		echo Plese first pull the latest changes with /sn pull/
@@ -205,9 +229,11 @@ sub_follow()
 			while read posts ; do
 				user=$(sed -n 1p $posts".info")
 				if [ $user == $1 ] ; then
-					test -d $(pwd)/mywall && cp $posts $(pwd)/mywall/$posts && echo $posts of $1 has been copied successfully to my local ./CoolNetwork/mywall directory.
+					test -f $(pwd)/mywall/$posts && rm $(pwd)/mywall/$posts && echo $posts of $1 has been deleted successfully from my local ./CoolNetwork/mywall directory. && touch $(pwd)/mywall/null
 				fi
 			done
+			test -f $(pwd)/mywall/null || echo I am sorry you do not follow any user with this name yet
+			test -f $(pwd)/mywall/null && rm $(pwd)/mywall/null
 		else
 			echo Please enter the user name you want to follow
 		fi
@@ -249,7 +275,13 @@ Start an issue repository
   push			Push a locally changed file to the CoolNetwork
 
 
-  follow		Follow a specified post of the CoolNetwork,
+  follow		Follow a specified user of the CoolNetwork,
+			the posts of this specific user will 
+			be copied to your /CoolNetwork/mywall 
+			local directory
+
+
+  unfollow		Unfollow a specified user of the CoolNetwork,
 			the posts of this specific user will 
 			be copied to your /CoolNetwork/mywall 
 			local directory"
@@ -292,6 +324,9 @@ case "$subcommand" in
   ;;
   follow)
   sub_follow "$@"
+  ;;
+  unfollow)
+  sub_unfollow "$@"
   ;;
   help)
   sub_help
