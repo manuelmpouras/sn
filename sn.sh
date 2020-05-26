@@ -19,7 +19,7 @@ sub_join()
 {
   if ! [ -d CoolNetwork/ ] ; then
     git clone https://github.com/manuelmpouras/CoolNetwork
-	git config --global user.name 'uname'
+	git config --global user.name $(whoami)
 	echo $(whoami)>>$(pwd)"/CoolNetwork/users.log"
 	cd $(pwd)"/CoolNetwork/"
 	git add "users.log"
@@ -44,12 +44,12 @@ sub_show_members()
 if ! [ -d CoolNetwork/ ] ; then
 	git clone https://github.com/manuelmpouras/CoolNetwork
 	cd $(pwd)"/CoolNetwork/"
-	ls users.log && git log --pretty=format:%an |
+	cat users.log |
 	sort |
 	uniq && echo " THE MEMBERS REGISTERED"
 else
 	cd $(pwd)"/CoolNetwork/"
-	ls users.log && git log --pretty=format:%an |
+	cat users.log |
 	sort |
 	uniq && echo " THE MEMBERS REGISTERED"
 fi
@@ -200,7 +200,7 @@ sub_follow()
 	else
 		if [ "$1" ] ; then
 			cd $(pwd)"/CoolNetwork/"
-			git log --pretty="%H" --author=$1 |
+			git log --pretty="%an" --author=$1 |
 			while read commit_hash ; do
 			git show --oneline --name-only $commit_hash 
 			done |
@@ -209,7 +209,7 @@ sub_follow()
 			cp $posts ./mywall/$posts && echo $posts of $1 has been copied successfully to my local ./CoolNetwork/mywall directory.
 			done
 		else
-			echo Please user name you want to follow
+			echo Please enter the user name you want to follow
 		fi
 	fi
 }
@@ -222,30 +222,37 @@ Start an issue repository
   join			Join our CoolNetwork, 
 			clones it in your curent directory
 			and registers you with your github's account.
-			
-			
+
+
   create		Create a new social network a with the name 
 			defined as the second argument 
 			in your current directory.
-			
-			
+
+
   show_members		Shows the names 
 			registed in our CoolNetwork.
-			
-			
+
+
   pull			Pull in your local directory 
 			all the posts and likes of the CoolNetwork.
-			
-			
+
+
   log			List all the posts and likes of the CoolNetwork.
-  
+
+
   like			Like a specified post
 
 
   post			Post a new story
 
 
-  push			a locally changed file to the CoolNetwork"
+  push			Push a locally changed file to the CoolNetwork
+
+
+  follow		Follow a specified post of the CoolNetwork,
+			the posts of this specific user will 
+			be copied to your /CoolNetwork/mywall 
+			local directory"
 
 }
 
