@@ -137,7 +137,7 @@ sub_post()
 		num=$(find . -name "*.post" |
 		wc -l )
 		n=$(expr $num + 1)
-		echo $1 | cat> $n.post
+		echo "$@" | cat> $n.post
 		echo $n
 		echo $(whoami)>"$n.post.info"
 		echo $(date)>>"$n.post.info"
@@ -200,13 +200,13 @@ sub_follow()
 	else
 		if [ "$1" ] ; then
 			cd $(pwd)"/CoolNetwork/"
-			git log --pretty="%an" --author=$1 |
-			while read commit_hash ; do
-			git show --oneline --name-only $commit_hash 
-			done |
+			test -d $(pwd)/mywall || mkdir $(pwd)/mywall
 			find *.post |
 			while read posts ; do
-			cp $posts ./mywall/$posts && echo $posts of $1 has been copied successfully to my local ./CoolNetwork/mywall directory.
+				user=$(sed -n 1p $posts".info")
+				if [ $user == $1 ] ; then
+					test -d $(pwd)/mywall && cp $posts $(pwd)/mywall/$posts && echo $posts of $1 has been copied successfully to my local ./CoolNetwork/mywall directory.
+				fi
 			done
 		else
 			echo Please enter the user name you want to follow
