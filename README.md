@@ -27,26 +27,26 @@ Start an issue repository
   like                  Like a specified post
   
   
-  post		            	Post a new story
+  post		        Post a new story
 
 
-  push		             	Push a locally changed file to the CoolNetwork
+  pu            	Push a locally changed file to the CoolNetwork
 
 
-  show_all_posts	      Show all the posts posted on the CoolNetwork
+  show_all_posts        Show all the posts posted on the CoolNetwork
 
 
-  show_favorite_post	  Show the post with the most likes
-		                  	on the CoolNetwork
+  show_favorite_post    Show the post with the most likes
+		        on the CoolNetwork
 
 
-  follow	            	Follow a specified user of the CoolNetwork,
-		                  	the posts of this specific user will 
-		                  	be copied to your /CoolNetwork/mywall 
-			                  local directory
+  follow	     	Follow a specified user of the CoolNetwork,
+		      	the posts of this specific user will 
+		        be copied to your /CoolNetwork/mywall 
+	                local directory
 
 
-  unfollow	          	Unfollow a specified user of the CoolNetwork,
-		                  	the posts of this specific user will 
-	                  		be copied to your /CoolNetwork/mywall 
-                  			local directory"
+  unfollow	        Unfollow a specified user of the CoolNetwork,
+		        the posts of this specific user will 
+	                be copied to your /CoolNetwork/mywall 
+                  	local directory"
