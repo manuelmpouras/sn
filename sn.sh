@@ -4,9 +4,9 @@ sub_new()
 {
 echo "$1"
   if [ "$1" ] ; then
-    git init $(pwd)"/""$1"
-	echo $(whoami)>>$(pwd)"/"$1"/users.log"
-	echo $(whoami)
+    git init "$(pwd)/""$1"
+	whoami>>"$(pwd)/$1/users.log"
+	whoami
   else
 	echo "Please define the name of the social network"
 
@@ -19,16 +19,17 @@ sub_join()
 {
   if ! [ -d CoolNetwork/ ] ; then
     git clone https://github.com/manuelmpouras/CoolNetwork
-	git config --global user.name $(whoami)
-	echo $(whoami)>>$(pwd)"/CoolNetwork/users.log"
-	cd $(pwd)"/CoolNetwork/"
+	git config --global user.name "$(whoami)"
+	whoami>>"$(pwd)""/CoolNetwork/users.log"
+	cd "$(pwd)/CoolNetwork/" || exit
 	git add "users.log"
 	git commit -m "New member registered"
 	git remote add origin https://github.com/manuelmpouras/CoolNetwork
 	git push -u origin master
 	if [ $? -ne 0 ] ; then
 		echo Oooops. Registration failed. I am sorry you should login in your github\' account.
-		rm -rf ../CoolNetwork/
+		cd ..
+		rm -rf "$(pwd)/CoolNetwork"
 	else
 		cd ..
 	fi
@@ -43,14 +44,12 @@ sub_show_members()
 {
 if ! [ -d CoolNetwork/ ] ; then
 	git clone https://github.com/manuelmpouras/CoolNetwork
-	cd $(pwd)"/CoolNetwork/"
-	cat users.log |
-	sort |
+	cd "$(pwd)/CoolNetwork/" || exit
+	sort users.log |
 	uniq && echo " THE MEMBERS REGISTERED"
 else
-	cd $(pwd)"/CoolNetwork/"
-	cat users.log |
-	sort |
+	cd "$(pwd)/CoolNetwork/" || exit
+	sort users.log |
 	uniq && echo " THE MEMBERS REGISTERED"
 fi
 }
@@ -71,14 +70,14 @@ sub_log()
 	if ! [ -d CoolNetwork/ ] ; then
 		echo Plese first pull the latest changes with /sn pull/
 	else
-		cd $(pwd)"/CoolNetwork/"
-		find . -name "*.post" |
+		cd "$(pwd)/CoolNetwork/" || exit
+		find * -name "*.post" |
 		sort |
 		uniq |
 		while read post ; do
 #			The number of likes is reported in the third line of the file "$post.info"
-			name_post= echo -n $post | cut -d '/' -f 2 | tr -d '\n'
-			echo -n " is a post with number of likes " && sed -n 3p "$post.info" 
+			echo "$post" | tr -d '\n'
+			echo " is a post with number of likes " | tr -d '\n' && sed -n 3p "$post.info"
 		done
 		echo " You can see all of them in your local CoolNetwork directory"
 	fi
@@ -90,10 +89,10 @@ sub_show()
 		echo Plese first pull the latest changes with /sn pull/
 	else
 		if [ "$1" ] ; then
-			cd $(pwd)"/CoolNetwork/"
-				echo -n "$1:"
+			cd "$(pwd)/CoolNetwork/" || exit
+				echo "$1:" | tr -d '\n'
 				test -f $1 || echo Is not a corect name /e.g. 1.post or 2.post etc./
-				test -f $1 && cat $(pwd)"/"$1
+				test -f $1 && cat "$(pwd)/"$1
 		else 
 			echo Please define a corect name /e.g. 1.post or 2.post etc./ of an existing post
 		fi
@@ -133,14 +132,14 @@ sub_post()
 	if ! [ -d CoolNetwork/ ] ; then
 		echo Plese first pull the latest changes with /sn pull/
 	else
-		cd $(pwd)"/CoolNetwork/"
+		cd "$(pwd)/CoolNetwork/" || exit
 		num=$(find . -name "*.post" |
 		wc -l )
 		n=$(expr $num + 1)
 		echo "$@" | cat> $n.post
 		echo $n
-		echo $(whoami)>"$n.post.info"
-		echo $(date)>>"$n.post.info"
+		whoami>"$n.post.info"
+		date>>"$n.post.info"
 		echo 0 >>"$n.post.info"
 		git add "$n.post"
 		git add "$n.post.info"
@@ -162,7 +161,7 @@ sub_push()
 		echo Plese first pull the latest changes with /sn pull/
 	else
 		if [ "$1" ] && test -f CoolNetwork/$1; then
-			cd $(pwd)"/CoolNetwork/"
+			cd "$(pwd)/CoolNetwork/" || exit
 			git add "$1"
 			git commit -m "new push from local changes"
 			git remote add origin https://github.com/manuelmpouras/CoolNetwork
@@ -184,8 +183,8 @@ sub_show_all_posts()
 	if ! [ -d CoolNetwork/ ] ; then
 		echo Plese first pull the latest changes with /sn pull/
 	else
-				cd CoolNetwork/
-				find . -name "*.post" |
+				cd "$(pwd)/CoolNetwork/" || exit
+				find * -name "*.post" |
 				while read f ; do
 					echo $f
 					cat $f
@@ -198,21 +197,21 @@ sub_show_favorite_post()
 	if ! [ -d CoolNetwork/ ] ; then
 		echo Plese first pull the latest changes with /sn pull/
 	else
-				cd CoolNetwork/
+				cd "$(pwd)/CoolNetwork/" || exit
 				flag=0
 				find * -name "*.post" |
 				while read posts ; do
 					likes=$(sed -n 3p "$posts.info")
 					if [ $likes -gt $flag ] ; then
-						touch $(pwd)/mywall/null
-						echo "$posts" > $(pwd)/mywall/null
-						cat $posts >> $(pwd)/mywall/null
+						touch "$(pwd)/null"
+						echo "$posts" > "$(pwd)/null"
+						cat $posts >> "$(pwd)/null"
 						flag=$likes
 					fi
 				done
-				echo -n "The the post with the most likes on the CoolNetwork is the:  "
-				cat $(pwd)/mywall/null
-				rm $(pwd)/mywall/null
+				echo "The the post with the most likes on the CoolNetwork is the:  " | tr -d "/n"
+				cat "$(pwd)/null"
+				rm "$(pwd)/null"
 	fi
 }
 ##Follow a specified user of the CoolNetwork, the posts of this specific user will be copied to your /CoolNetwork/mywall local directory
@@ -222,18 +221,18 @@ sub_follow()
 		echo Plese first pull the latest changes with /sn pull/
 	else
 		if [ "$1" ] ; then
-			cd $(pwd)"/CoolNetwork/"
-			test -d $(pwd)/mywall || mkdir $(pwd)/mywall
+			cd "$(pwd)/CoolNetwork/" || exit
+			test -d "$(pwd)/mywall" || mkdir "$(pwd)/mywall"
 			flag=0
 			find *.post |
 			while read posts ; do
 				user=$(sed -n 1p $posts".info")
-				if [ $user == $1 ] ; then
-					cp $posts $(pwd)/mywall/$posts && echo $posts of $1 has been copied successfully to my local ./CoolNetwork/mywall directory. && touch $(pwd)/mywall/null
+				if [ $user = $1 ] ; then
+					cp "$posts" "$(pwd)/mywall/$posts" && echo $posts of $1 has been copied successfully to my local ./CoolNetwork/mywall directory. && touch "$(pwd)/mywall/null"
 				fi
 			done
-			test -f $(pwd)/mywall/null || echo I am sorry there no any post of this user yet
-			test -f $(pwd)/mywall/null && rm $(pwd)/mywall/null
+			test -f "$(pwd)/mywall/null" || echo I am sorry there no any post of this user yet
+			test -f "$(pwd)/mywall/null" && rm "$(pwd)/mywall/null"
 		else
 			echo Please enter the user name you want to follow
 		fi
@@ -246,17 +245,17 @@ sub_unfollow()
 		echo Plese first pull the latest changes with /sn pull/
 	else
 		if [ "$1" ] ; then
-			cd $(pwd)"/CoolNetwork/"
-			test -d $(pwd)/mywall || mkdir $(pwd)/mywall
+			cd "$(pwd)/CoolNetwork/" || exit
+			test -d "$(pwd)/mywall" || mkdir "$(pwd)/mywall"
 			find *.post |
 			while read posts ; do
 				user=$(sed -n 1p $posts".info")
-				if [ $user == $1 ] ; then
-					test -f $(pwd)/mywall/$posts && rm $(pwd)/mywall/$posts && echo $posts of $1 has been deleted successfully from my local ./CoolNetwork/mywall directory. && touch $(pwd)/mywall/null
+				if [ $user = $1 ] ; then
+					test -f "$(pwd)/mywall/$posts" && rm "$(pwd)/mywall/$posts" && echo $posts of $1 has been deleted successfully from my local ./CoolNetwork/mywall directory. && touch "$(pwd)/mywall/null"
 				fi
 			done
-			test -f $(pwd)/mywall/null || echo I am sorry you do not follow any user with this name yet
-			test -f $(pwd)/mywall/null && rm $(pwd)/mywall/null
+			test -f "$(pwd)/mywall/null" || echo "I am sorry you do not follow any user with this name yet"
+			test -f "$(pwd)/mywall/null" && rm "$(pwd)/mywall/null"
 		else
 			echo Please enter the user name you want to follow
 		fi
@@ -319,7 +318,6 @@ Start an issue repository
 }
 
 subcommand="$1"
-net_name="$2"
 shift
 case "$subcommand" in
   create)
