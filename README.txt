@@ -1,6 +1,24 @@
 Social network
 
 
+INSTALATION
+
+#First option having the sn.tar.gz file
+#First copy the sn script to a directory of your local disk and execute there the following commands
+tar -xzf sn.tar.gz
+cd sn/
+chmod +x sn.sh #Make the script executable
+./sn.sh #Plus any argument in order to execute it, if without any argument, then the help documentation will be shown
+
+#Second option without having the sn.tar.gz file
+#First copy the sn script to a directory of your local disk and execute there the following commands
+git clone https://github.com/manuelmpouras/sn
+cd sn/
+chmod +x sn.sh #Make the script executable
+./sn.sh #Plus any argument in order to execute it, if without any argument, then the help documentation will be shown
+
+USE
+
   join                  Join our CoolNetwork,
                         clones it in your curent directory
                         and registers you with your github's account.
