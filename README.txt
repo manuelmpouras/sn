@@ -19,6 +19,8 @@ chmod +x sn.sh #Make the script executable
 
 USE
 
+First of all please create your free account if github, if you do not have one yet.
+
   join                  Join our CoolNetwork,
                         clones it in your curent directory
                         and registers you with your github's account.
