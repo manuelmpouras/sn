@@ -1,10 +1,5 @@
-<!DOCTYPE html>
-<html>
-<head>
-<title> Social network </title>
-</head>
-<body>
-Start an issue repository
+Social network
+
 
   join                  Join our CoolNetwork,
                         clones it in your curent directory
@@ -53,5 +48,3 @@ Start an issue repository
 		        the posts of this specific user will 
 	                be copied to your /CoolNetwork/mywall 
                   	local directory"
-</body>
-</html>
