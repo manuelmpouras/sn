@@ -1,5 +1,5 @@
 # sn
-Social network
+<head>Social network</head>
 
 Start an issue repository
 
