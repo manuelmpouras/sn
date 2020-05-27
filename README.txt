@@ -46,7 +46,7 @@ USE
   post		        Post a new story
 
 
-  pu            	Push a locally changed file to the CoolNetwork
+  push            	Push a locally changed file to the CoolNetwork
 
 
   show_all_posts        Show all the posts posted on the CoolNetwork
