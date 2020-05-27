@@ -192,6 +192,29 @@ sub_show_all_posts()
 				done
 	fi
 }
+##Show the post with the most likes of the CoolNetwork
+sub_show_favorite_post()
+{
+	if ! [ -d CoolNetwork/ ] ; then
+		echo Plese first pull the latest changes with /sn pull/
+	else
+				cd CoolNetwork/
+				flag=0
+				find * -name "*.post" |
+				while read posts ; do
+					likes=$(sed -n 3p "$posts.info")
+					if [ $likes -gt $flag ] ; then
+						touch $(pwd)/mywall/null
+						echo "$posts" > $(pwd)/mywall/null
+						cat $posts >> $(pwd)/mywall/null
+						flag=$likes
+					fi
+				done
+				echo -n "The the post with the most likes on the CoolNetwork is the:  "
+				cat $(pwd)/mywall/null
+				rm $(pwd)/mywall/null
+	fi
+}
 ##Follow a specified user of the CoolNetwork, the posts of this specific user will be copied to your /CoolNetwork/mywall local directory
 sub_follow()
 {
@@ -275,6 +298,13 @@ Start an issue repository
   push			Push a locally changed file to the CoolNetwork
 
 
+  show_all_posts	Show all the posts posted on the CoolNetwork
+
+
+  show_favorite_post	Show the post with the most likes
+			on the CoolNetwork
+
+
   follow		Follow a specified user of the CoolNetwork,
 			the posts of this specific user will 
 			be copied to your /CoolNetwork/mywall 
@@ -321,6 +351,9 @@ case "$subcommand" in
   ;;
   show_all_posts)
   sub_show_all_posts
+  ;;
+  show_favorite_post)
+  sub_show_favorite_post
   ;;
   follow)
   sub_follow "$@"
