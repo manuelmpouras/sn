@@ -22,7 +22,7 @@ USE
 First of all please create your free account if github, if you do not have one yet.
 
   join                  Join our CoolNetwork,
-                        clones it in your curent directory
+                        clones it in your current directory
                         and registers you with your github's account.
 
 
@@ -32,7 +32,7 @@ First of all please create your free account if github, if you do not have one y
 
 
   show_members          Shows the names
-                        registed in our CoolNetwork.
+                        registered in our CoolNetwork.
 
 
   pull                  Pull in your local directory
