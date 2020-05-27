@@ -1,6 +1,9 @@
-# sn
-<head>Social network</head>
-
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Social network</title>
+	</head>
+<body>
 Start an issue repository
 
   join                  Join our CoolNetwork,
@@ -50,3 +53,5 @@ Start an issue repository
 		        the posts of this specific user will 
 	                be copied to your /CoolNetwork/mywall 
                   	local directory"
+</body>
+</html>
